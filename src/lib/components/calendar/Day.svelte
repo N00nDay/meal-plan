@@ -2,9 +2,9 @@
 	import { Badge } from 'stwui';
 
 	export let day: number;
-	export let breakfast: false;
-	export let lunch: false;
-	export let dinner: false;
+	export let breakfast = false;
+	export let lunch = false;
+	export let dinner = false;
 </script>
 
 <div class="relative bg-surface px-3 py-2 h-32 w-full">

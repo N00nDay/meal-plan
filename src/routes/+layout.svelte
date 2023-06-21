@@ -60,6 +60,7 @@
 					href="/sign-in">Get Started</Button
 				>
 			{:else}
+				<Button href="/meals" class="hidden md:block">Meals</Button>
 				<Button href="/planner" class="hidden md:block">Planner</Button>
 				<Button href="/shopping-list" class="hidden md:block">Shopping</Button>
 				<Button href="/blog" class="hidden md:block">Blog</Button>
@@ -78,7 +79,7 @@
 		</Layout.Header.Extra>
 	</Layout.Header>
 
-	<Layout.Content class="h-[calc(100%-64px)] bg-background" expandedWidth="17rem">
+	<Layout.Content class="h-[calc(100%-64px)] bg-background">
 		<Layout.Content.Body
 			id="content-body"
 			class="relative h-full w-full overflow-x-hidden overflow-y-auto pt-[calc(1rem+var(--sat))] pb-[calc(1rem+var(--sab))] pr-[calc(1rem+var(--sar))] pl-[calc(1rem+var(--sal))] md:pt-[calc(2rem+var(--sat))] md:pb-[calc(2rem+var(--sab))] md:pr-[calc(2rem+var(--sar))] md:pl-[calc(2rem+var(--sal))]"
@@ -86,12 +87,18 @@
 			<slot />
 
 			<Layout.Footer class="h-auto shadow-none bg-background">
-				<div class="mx-auto max-w-7xl overflow-hidden px-3 py-8 sm:py-12 lg:px-5">
+				<div class="mx-auto max-w-7xl overflow-hidden pt-8">
 					{#if session !== null}
 						<nav
 							class="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12"
 							aria-label="Footer"
 						>
+							<div class="pb-6">
+								<a
+									href="/meals"
+									class="text-sm leading-6 text-secondary-content hover:text-opacity-75">Meals</a
+								>
+							</div>
 							<div class="pb-6">
 								<a
 									href="/planner"
@@ -112,7 +119,7 @@
 							</div>
 						</nav>
 					{/if}
-					<p class="mt-10 text-center text-xs leading-5 text-content">
+					<p class="mt-6 text-center text-xs leading-5 text-content">
 						&copy; 2023 Digital Point Solutions, LLC All rights reserved.
 					</p>
 				</div>
@@ -143,6 +150,12 @@
 					<div class="-my-6">
 						{#if session !== null}
 							<div class="space-y-2 py-6">
+								<a
+									href="/meals"
+									on:click={toggleMenuState}
+									class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-secondary-content hover:text-secondary-content-hover"
+									>Meals</a
+								>
 								<a
 									href="/planner"
 									on:click={toggleMenuState}
