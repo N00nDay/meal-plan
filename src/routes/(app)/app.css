@@ -1,0 +1,11 @@
+html {
+	@apply overflow-hidden;
+}
+
+body {
+	@apply overflow-hidden;
+}
+
+body > div {
+	@apply overflow-hidden;
+}

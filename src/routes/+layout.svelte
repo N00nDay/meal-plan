@@ -1,20 +1,37 @@
-<script>
+<script lang="ts">
 	import '../app.css';
-	import '../app.postcss';
-
-	import { Button, Portal, Drawer, Layout } from 'stwui';
-	import logo from '$lib/assets/180.png';
-
-	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
+	// import 'simplebar'; // or "import SimpleBar from 'simplebar';" if you want to use it manually.
+	// import 'simplebar/dist/simplebar.css';
+	import { invalidate } from '$app/navigation';
+
+	// let htmlElement: HTMLElement;
+	// let theme: 'light' | 'dark' = 'light';
+
+	// function toggleTheme(event: MediaQueryListEvent) {
+	// 	theme = event.matches ? 'dark' : 'light';
+	// 	htmlElement.setAttribute('data-theme', theme);
+	// }
 
 	export let data;
+	$: console.log('data', data);
 
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
-	$: console.log('session', session);
 
 	onMount(() => {
+		// htmlElement = document.documentElement;
+
+		// if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+		// 	theme = 'dark';
+		// } else {
+		// 	theme = 'light';
+		// }
+
+		// htmlElement.setAttribute('data-theme', theme);
+
+		// window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', toggleTheme);
+
 		const {
 			data: { subscription }
 		} = supabase.auth.onAuthStateChange((event, _session) => {
@@ -23,176 +40,81 @@
 			}
 		});
 
-		return () => subscription.unsubscribe();
+		return () => {
+			subscription.unsubscribe();
+			// window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', toggleTheme);
+		};
 	});
-
-	const menu_icon =
-		'<svg xmlns="http://www.w3.org/2000/svg" style="height:24px;width:24px;" viewBox="0 0 24 24"><title>menu</title><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>';
-
-	let menuOpen = false;
-
-	function toggleMenuState() {
-		menuOpen = !menuOpen;
-	}
-
-	async function handleSignOut() {
-		await supabase.auth.signOut();
-	}
 </script>
 
-<Layout>
-	<div class="fixed top-0 left-0 right-0 h-[var(--sat)] z-10 bg-surface shadow-md" />
-	<Layout.Header>
-		<a href="/" class="-m-1.5 p-1.5 flex flex-row gap-2 items-center">
-			<img class="h-8 w-auto" src={logo} alt="logo" />
-			<span
-				class="font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-primary to-content"
-				>You Got To Eat</span
+<svelte:head>
+	<!-- {#if theme === 'dark'}
+		<meta name="theme-color" content="#242526" />
+	{:else}
+		<meta name="theme-color" content="#ffffff" />
+	{/if} -->
+
+	<!-- <title>{$page.data.title}</title>
+	<meta name="description" content={$page.data.description} /> -->
+	<!-- TODO:  figure out canonical rel -->
+	<!-- <link rel="canonical" href="https://madewithsvelte.com/ui-library"> -->
+	<!-- <meta name="og:title" content={$page.data.title} />
+	<meta property="og:description" content={$page.data.description} /> -->
+	<!-- TODO: add url to all page load functions -->
+	<!-- <meta property="og:url" content={$page.data.url}> -->
+	<!-- <meta name="twitter:title" content={$page.data.title} />
+	<meta name="twitter:description" content={$page.data.description} /> -->
+</svelte:head>
+
+<!-- <div class="bg-white md:bg-background md:items-center md:justify-center flex flex-col h-full">
+	<img
+		src={utensils_bg}
+		alt="background utensils"
+		class="-mt-52 w-full md:hidden max-w-md mx-auto px-16"
+	/>
+
+	<div class="mt-8 w-full md:hidden h-full pb-8 overflow-hidden">
+		{#key data.url}
+			<div
+				class="space-y-4 max-w-sm mx-auto px-8 md:max-w-full md:mx-0 md:flex md:flex-col md:items-center md:justify-center w-full h-full"
+				in:fly={{ x: 200, duration: 300, delay: 300 }}
+				out:fade={{ duration: 300 }}
 			>
-		</a>
+				<slot />
+			</div>
+		{/key}
+	</div>
 
-		<Layout.Header.Extra slot="extra" class="space-x-2">
-			{#if session === null}
-				<Button
-					type="primary"
-					shape="pill"
-					class="bg-success text-gray-800 hidden md:block"
-					href="/sign-in">Get Started</Button
-				>
-			{:else}
-				<Button href="/meals" class="hidden md:block">Meals</Button>
-				<Button href="/planner" class="hidden md:block">Planner</Button>
-				<Button href="/shopping-list" class="hidden md:block">Shopping</Button>
-				<Button href="/blog" class="hidden md:block">Blog</Button>
-
-				<Button
-					type="primary"
-					shape="pill"
-					class="bg-error text-gray-800 hidden md:block"
-					on:click={handleSignOut}>Sign Out</Button
-				>
-			{/if}
-
-			<Button shape="circle" on:click={toggleMenuState} class="block md:hidden">
-				<Button.Icon data={menu_icon} />
-			</Button>
-		</Layout.Header.Extra>
-	</Layout.Header>
-
-	<Layout.Content class="h-[calc(100%-64px)] bg-background">
-		<Layout.Content.Body
-			id="content-body"
-			class="relative h-full w-full overflow-x-hidden overflow-y-auto pt-[calc(1rem+var(--sat))] pb-[calc(1rem+var(--sab))] pr-[calc(1rem+var(--sar))] pl-[calc(1rem+var(--sal))] md:pt-[calc(2rem+var(--sat))] md:pb-[calc(2rem+var(--sab))] md:pr-[calc(2rem+var(--sar))] md:pl-[calc(2rem+var(--sal))]"
+	<Card
+		class="hidden md:block max-w-2xl w-full mx-auto overflow-hidden min-h-[436px] max-h-[436px] h-full"
+	>
+		<Card.Content
+			slot="content"
+			class="flex flex-row justify-evenly relative overflow-hidden max-w-full w-full h-full"
 		>
-			<slot />
+			<div class="w-full min-w-[40%] max-w-[40%] h-full absolute left-0 top-0 bottom-0">
+				<img
+					src={utensils_bg}
+					alt="background utensils"
+					class="-mt-20 mx-auto h-full min-h-full max-h-full"
+				/>
+			</div>
 
-			<Layout.Footer class="h-auto shadow-none bg-background">
-				<div class="mx-auto max-w-7xl overflow-hidden pt-8">
-					{#if session !== null}
-						<nav
-							class="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12"
-							aria-label="Footer"
-						>
-							<div class="pb-6">
-								<a
-									href="/meals"
-									class="text-sm leading-6 text-secondary-content hover:text-opacity-75">Meals</a
-								>
-							</div>
-							<div class="pb-6">
-								<a
-									href="/planner"
-									class="text-sm leading-6 text-secondary-content hover:text-opacity-75">Planner</a
-								>
-							</div>
-							<div class="pb-6">
-								<a
-									href="/shopping-list"
-									class="text-sm leading-6 text-secondary-content hover:text-opacity-75">Shopping</a
-								>
-							</div>
-							<div class="pb-6">
-								<a
-									href="/blog"
-									class="text-sm leading-6 text-secondary-content hover:text-opacity-75">Blog</a
-								>
-							</div>
-						</nav>
-					{/if}
-					<p class="mt-6 text-center text-xs leading-5 text-content">
-						&copy; 2023 Digital Point Solutions, LLC All rights reserved.
-					</p>
-				</div>
-			</Layout.Footer>
-		</Layout.Content.Body>
-	</Layout.Content>
-</Layout>
-
-<Portal>
-	{#if menuOpen}
-		<Drawer handleClose={toggleMenuState}>
-			<Drawer.Header slot="header">
-				<a
-					href="/"
-					class="-m-1.5 p-1.5 flex flex-row gap-2 items-center"
-					on:click={toggleMenuState}
-				>
-					<span class="sr-only">You Got To Eat</span>
-					<img class="h-8 w-auto" src={logo} alt="logo" />
-					<span
-						class="font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-primary to-content"
-						>You Got To Eat</span
+			<div
+				class="absolute top-0 right-0 bottom-0 w-full min-w-[60%] max-w-[60%] h-full overflow-hidden"
+			>
+				{#key data.url}
+					<div
+						class="space-y-4 max-w-sm mx-auto px-8 md:max-w-full md:mx-0 md:flex md:flex-col md:items-center md:justify-center w-full h-full"
+						in:fly={{ x: 200, duration: 300, delay: 300 }}
+						out:fade={{ duration: 300 }}
 					>
-				</a>
-			</Drawer.Header>
-			<Drawer.Content slot="content">
-				<div class="flow-root">
-					<div class="-my-6">
-						{#if session !== null}
-							<div class="space-y-2 py-6">
-								<a
-									href="/meals"
-									on:click={toggleMenuState}
-									class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-secondary-content hover:text-secondary-content-hover"
-									>Meals</a
-								>
-								<a
-									href="/planner"
-									on:click={toggleMenuState}
-									class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-secondary-content hover:text-secondary-content-hover"
-									>Planner</a
-								>
-								<a
-									href="/shopping-list"
-									on:click={toggleMenuState}
-									class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-text-secondary-content hover:bg-gray-50"
-									>Shopping</a
-								>
-								<a
-									href="/blog"
-									on:click={toggleMenuState}
-									class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-text-secondary-content hover:bg-gray-50"
-									>Blog</a
-								>
-							</div>
-
-							<Button
-								type="primary"
-								shape="pill"
-								class="bg-error text-gray-800 w-full"
-								on:click={handleSignOut}>Sign Out</Button
-							>
-						{:else}
-							<Button
-								type="primary"
-								shape="pill"
-								class="bg-success text-gray-800 w-full"
-								href="/sign-in">Sign In</Button
-							>
-						{/if}
+						<slot />
 					</div>
-				</div>
-			</Drawer.Content>
-		</Drawer>
-	{/if}
-</Portal>
+				{/key}
+			</div>
+		</Card.Content>
+	</Card>
+</div> -->
+
+<slot />

@@ -1,4 +1,4 @@
-import preprocess from 'svelte-preprocess';
+// import preprocess from 'svelte-preprocess';
 import adapter from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/kit/vite';
 
@@ -7,11 +7,14 @@ const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
 	preprocess: [
-		vitePreprocess(),
-		preprocess({
+		vitePreprocess({
 			postcss: true,
 			sourceMap: true
 		})
+		// preprocess({
+		// 	postcss: true,
+		// 	sourceMap: true
+		// })
 	],
 
 	kit: {
@@ -24,7 +27,9 @@ const config = {
 			$actions: './src/lib/actions/',
 			$components: './src/lib/components/',
 			$utils: './src/lib/utils/',
-			$database: './src/lib/database/'
+			$database: './src/lib/database/',
+			$assets: './src/lib/assets/',
+			$stores: './src/lib/stores/'
 			// $types: '/.src/lib/types'
 		}
 	}

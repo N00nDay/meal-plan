@@ -1,0 +1,15 @@
+#meal-page .drawer {
+	@apply !max-h-full;
+	@apply h-[calc(100%+2.5rem)];
+}
+
+#meal-page .drawer > .panel {
+	@apply !max-h-full;
+	@apply !rounded-t-2xl;
+	@apply h-full;
+}
+
+#meal-page .drawer .inner-panel {
+	@apply !rounded-t-2xl;
+	/* @apply overflow-auto; */
+}
